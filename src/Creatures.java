@@ -10,7 +10,6 @@ public class Creatures {
     boolean powerUpActive = false;
     int powerUpTurns = 0;
 
-
     Creatures(String name, String element, int hp, int attack, int magicAttack, int heal){
         this.name = name;
         this.element = element;
@@ -33,7 +32,6 @@ public class Creatures {
 
     public void smack(Creatures target){
         int damage = 50;
-
         if(powerUpActive){
             damage *= 2;
             powerUpTurns --;

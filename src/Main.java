@@ -10,26 +10,27 @@ public class Main {
 
         ArrayList<MyCreatures> myTeam = new ArrayList<>();
 
-        enemyCreaturesList.add(new EnemyCreatures("Flue", "Fire", 100, 20, 0, 0));
-        enemyCreaturesList.add(new EnemyCreatures("Flowerpiller", "Nature", 80, 15, 0, 0));
-        enemyCreaturesList.add(new EnemyCreatures("Prawnja", "Water", 110, 25, 0, 0));
+        enemyCreaturesList.add(new EnemyCreatures("Flue", "Fire", 200, 20, 0, 0));
+        enemyCreaturesList.add(new EnemyCreatures("Flowerpiller", "Nature", 200, 15, 0, 0));
+        enemyCreaturesList.add(new EnemyCreatures("Prawnja", "Water", 200, 25, 0, 0));
 
+        myCreaturesList.add(new MyCreatures("Flur", "Fire", 100, 20, 0, 0));
+        myCreaturesList.add(new MyCreatures("Flowerpiller", "Nature", 800, 15, 0, 0));
+        myCreaturesList.add(new MyCreatures("Prawnja", "Water", 110, 25, 0, 0));
+        myCreaturesList.add(new MyCreatures("Flur", "Fire", 100, 20, 0, 0));
+        myCreaturesList.add(new MyCreatures("Flowerpiller", "Nature", 80, 15, 0, 0));
+        myCreaturesList.add(new MyCreatures("Prawnja", "Water", 110, 25, 0, 0));
+        myCreaturesList.add(new MyCreatures("Flur", "Fire", 100, 20, 0, 0));
+        myCreaturesList.add(new MyCreatures("Flowerpiller", "Nature", 80, 15, 0, 0));
+        myCreaturesList.add(new MyCreatures("Prawnja", "Water", 110, 25, 0, 0));
+        myCreaturesList.add(new MyCreatures("Flur", "Fire", 100, 20, 0, 0));
+        myCreaturesList.add(new MyCreatures("Flowerpiller", "Nature", 80, 15, 0, 0));
+        myCreaturesList.add(new MyCreatures("Prawnja", "Water", 110, 25, 0, 0));
 
-        myCreaturesList.add(new MyCreatures("Flur", "Fire", 100, 20, 0, 0));
-        myCreaturesList.add(new MyCreatures("Flowerpiller", "Nature", 80, 15, 0, 0));
-        myCreaturesList.add(new MyCreatures("Prawnja", "Water", 110, 25, 0, 0));
-        myCreaturesList.add(new MyCreatures("Flur", "Fire", 100, 20, 0, 0));
-        myCreaturesList.add(new MyCreatures("Flowerpiller", "Nature", 80, 15, 0, 0));
-        myCreaturesList.add(new MyCreatures("Prawnja", "Water", 110, 25, 0, 0));
-        myCreaturesList.add(new MyCreatures("Flur", "Fire", 100, 20, 0, 0));
-        myCreaturesList.add(new MyCreatures("Flowerpiller", "Nature", 80, 15, 0, 0));
-        myCreaturesList.add(new MyCreatures("Prawnja", "Water", 110, 25, 0, 0));
-        myCreaturesList.add(new MyCreatures("Flur", "Fire", 100, 20, 0, 0));
-        myCreaturesList.add(new MyCreatures("Flowerpiller", "Nature", 80, 15, 0, 0));
-        myCreaturesList.add(new MyCreatures("Prawnja", "Water", 110, 25, 0, 0));
+        myTeam.add(myCreaturesList.get(1));
+        myTeam.add(myCreaturesList.get(2));
         myTeam.add(myCreaturesList.get(3));
         myTeam.add(myCreaturesList.get(4));
-        myTeam.add(myCreaturesList.get(5));
 
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
@@ -44,15 +45,18 @@ public class Main {
         switch(choseOption){
             case 'F' -> {
                     EnemyCreatures enemy = enemyCreaturesList.get(random.nextInt(enemyCreaturesList.size()));
-                    MyCreatures player = myCreaturesList.get(0);
-                    System.out.println(enemy);
+                    MyCreatures player = myTeam.get(0);
                     System.out.println(player);
-                while (enemy.hp > 0 && player.hp > 0) {
+                    System.out.println(enemy);
+
+                fightLoop: while (enemy.hp > 0 && player.hp > 0) {
                     System.out.println("Chose your move: ");
                     System.out.println("1) Burn");
                     System.out.println("2) Power up");
                     System.out.println("3) Smack");
                     System.out.println("4) Change Miscrit");
+                    System.out.println("5) Capture Miscrit \uD83D\uDCD6");
+                    System.out.printf("Capture chance: %.1f%%\n", 45 + (100 - (double)enemy.getHp() / enemy.getMaxHp() * 100) / 2);
                     System.out.print("Type here: ");
                     int choseMove = scanner.nextInt();
 
@@ -64,8 +68,44 @@ public class Main {
                             for (int i = 0; i < myTeam.size(); i++) {
                                 System.out.println((i + 1) + ") " + myTeam.get(i).name);
                             }
-                            System.out.print("Chose Miscrit");
+                            System.out.print("Chose Miscrit: ");
                             choseMove = scanner.nextInt();
+                                switch(choseMove){
+                                    case 1 -> {
+                                        player = myTeam.get(0);
+                                        System.out.println("your chose " + player);
+                                    }
+                                    case 2 -> {
+                                        player = myTeam.get(1);
+                                        System.out.println("your chose " + player);
+
+                                    }
+                                    case 3 -> {
+                                        player = myTeam.get(2);
+                                        System.out.println("your chose " + player);
+                                    }
+                                    case 4 -> {
+                                        player = myTeam.get(3);
+                                        System.out.println("your chose " + player);
+                                    }
+                                }
+
+                        }
+                        case 5 -> {
+                                int maxHp = enemy.getMaxHp();
+                                int currentHp = enemy.getHp();
+                                double hpPercent = (double) currentHp / maxHp * 100;
+                                double captureChance = 45 + (100 - hpPercent) / 2;
+
+                                int roll = random.nextInt(100) + 1;
+                                if(roll > captureChance){
+                                    System.out.println("Capture failed");
+                                } else if(roll <= captureChance ){
+                                    System.out.println("You capture the " + enemy.name);
+                                    myCreaturesList.add(new MyCreatures(enemy.name, enemy.element, enemy.hp, enemy.attack, enemy.magicAttack, enemy.heal));
+                                    break fightLoop;
+                                }
+
 
                         }
 
@@ -101,6 +141,7 @@ public class Main {
                     choseOption = scanner.nextLine().toUpperCase().charAt(0);
                     switch (choseOption) {
                         case 'C' -> {
+                            myTeam.clear();
                             for (int i = 0; i < 4; i++) {
                                 System.out.println("Choose creature number for slot " + (i + 1) + ":");
                                 int choice = scanner.nextInt();
@@ -132,6 +173,7 @@ public class Main {
                     }
                 }
             }
+
 
 
 
