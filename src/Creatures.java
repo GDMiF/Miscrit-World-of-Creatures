@@ -6,17 +6,20 @@ public class Creatures {
     int attack;
     int magicAttack;
     int heal;
+    int level;
+    int xp;
 
     boolean powerUpActive = false;
     int powerUpTurns = 0;
 
-    Creatures(String name, String element, int hp, int attack, int magicAttack, int heal){
+    Creatures(String name, String element, int hp, int attack, int magicAttack, int heal, int level, int xp){
         this.name = name;
         this.element = element;
         this.hp = hp;
         this.attack = attack;
         this.magicAttack = magicAttack;
         this.heal = heal;
+        this.level = level;
     }
 
     public void takeDamage(int damage){
