@@ -2,8 +2,8 @@ public class EnemyCreatures extends Creatures{
 
     int maxHp;
 
-    EnemyCreatures(String name, String element, int hp, int attack, int magicAttack, int heal, int level, int xp){
-        super(name, element, hp, attack, magicAttack, heal, level, xp);
+    EnemyCreatures(String name, String element, int hp, int attack, int magicAttack, int heal, int level, int xp, int maxXp){
+        super(name, element, hp, attack, magicAttack, heal, level, xp, maxXp);
         this.maxHp = hp;
     }
 

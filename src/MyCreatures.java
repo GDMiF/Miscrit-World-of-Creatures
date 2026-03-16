@@ -1,7 +1,7 @@
 public class MyCreatures extends Creatures{
 
-    MyCreatures(String name, String element, int hp, int attack, int magicAttack, int heal, int xp, int level){
-        super(name, element, hp, attack, magicAttack, heal, level, xp);
+    MyCreatures(String name, String element, int hp, int attack, int magicAttack, int heal, int xp, int level, int maxXp){
+        super(name, element, hp, attack, magicAttack, heal, level, xp, maxXp);
     }
 
     @Override
