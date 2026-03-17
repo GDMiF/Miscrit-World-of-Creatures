@@ -1,41 +1,63 @@
+import javax.sound.sampled.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import java.io.File;
 
 public class Main {
     public static void main(String[] args) {
 
+        String filePath = "src\\miscrit-sunfall-kingdom-ost-2-sunfall-village.wav";
+        File file = new File(filePath);
+
+        try(AudioInputStream audioStream = AudioSystem.getAudioInputStream(file)){
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start();
+        }
+        catch(FileNotFoundException e){
+            System.out.println("Could not locate file");
+        }
+        catch(UnsupportedAudioFileException e){
+            System.out.println("Audio file is not supported");
+        }
+        catch(LineUnavailableException e){
+            System.out.println("Unable to acces audio resource");
+        }
+        catch(IOException e){
+            System.out.println("Something went wrong");
+        }
+
         ArrayList<MyCreatures> myCreaturesList = new ArrayList<>();
         ArrayList<EnemyCreatures> enemyCreaturesList = new ArrayList<>();
-
         ArrayList<MyCreatures> myTeam = new ArrayList<>();
 
-        enemyCreaturesList.add(new EnemyCreatures("enemy", "Water", 200, 20, 50, 0, 5, 0, 10));
+        enemyCreaturesList.add(new EnemyCreatures("Flue", "Fire", 100, 20, 20, 100, 1, 0, 10));
+        enemyCreaturesList.add(new EnemyCreatures("Flowerpiller", "Nature", 80, 30, 20, 80, 1, 0, 10));
+        enemyCreaturesList.add(new EnemyCreatures("Pravnja", "Water", 90, 25, 20, 90, 1, 0, 10));
+        enemyCreaturesList.add(new EnemyCreatures("Defilio", "Earth", 130, 20, 20, 130, 1, 0, 10));
+        enemyCreaturesList.add(new EnemyCreatures("Buzzock", "Lightning", 120, 25, 20, 120, 1, 0, 10));
+        enemyCreaturesList.add(new EnemyCreatures("Da Windy", "Air", 110, 30, 20, 110, 1, 0, 10));
 
-
-        myCreaturesList.add(new MyCreatures("Flur", "Fire", 10000, 20, 50, 0, 0, 10, 10));
-        myCreaturesList.add(new MyCreatures("Flur", "Fire", 100, 20, 0, 0, 0, 20, 10));
-        myCreaturesList.add(new MyCreatures("Flur", "Fire", 100, 20, 0, 0, 0, 10, 10));
-        myCreaturesList.add(new MyCreatures("Flur", "Fire", 100, 20, 0, 0, 0, 10, 10));
-
-
+        myCreaturesList.add(new MyCreatures("Flue", "Fire", 1000, 20, 20, 100, 0, 1, 10));
         myTeam.add(myCreaturesList.get(0));
-        myTeam.add(myCreaturesList.get(1));
-        myTeam.add(myCreaturesList.get(2));
-        myTeam.add(myCreaturesList.get(3));
 
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
         boolean gameIsRunning = true;
-        boolean menuIsRunning = true;
 
         while(gameIsRunning) {
 
-        System.out.println("Welcome To Miscrits");
-        System.out.println("Press F to start the fight: ");
-        System.out.println("Press M to see your Miscrits: ");
+        System.out.println("Welcome To Miscrits\uD83C\uDFAE");
+        System.out.println("Press F to start the fight⚔\uFE0F ");
+        System.out.println("Press M to see your Miscrits\uD83D\uDCD6 ");
+        System.out.println("Press H to heal your Miscrits\uD83D\uDC9B");
+        System.out.println("Press X to close the game❌");
+        System.out.print("Press here: ");
         Character choseOption = scanner.nextLine().toUpperCase().charAt(0);
-            boolean captureUsed = false;
+        boolean captureUsed = false;
 
         for(EnemyCreatures creature : enemyCreaturesList){
             creature.hp = creature.maxHp;
@@ -44,7 +66,11 @@ public class Main {
         switch (choseOption) {
             case 'F' -> {
 
-                int playerLevel = (myTeam.get(0).level + myTeam.get(1).level + myTeam.get(2).level + myTeam.get(3).level) / 4;
+                int playerLevel = 0;
+                for (MyCreatures c : myTeam) {
+                    playerLevel += c.level;
+                }
+                playerLevel = playerLevel / myTeam.size();
                 int minLevel = Math.max(1, playerLevel - 2);
                 int maxLevel = playerLevel + 2;
                 int enemyLevel = random.nextInt(maxLevel - minLevel + 1) + minLevel;
@@ -53,25 +79,23 @@ public class Main {
                 EnemyCreatures enemy = new EnemyCreatures(
                         template.name,
                         template.element,
-                        150 * enemyLevel,
-                        15 * enemyLevel,
-                        0, 0,
+                        template.hp + enemyLevel * 5,
+                        template.attack + enemyLevel * 5,
+                        template.magicAttack,
+                        template.heal,
                         enemyLevel,
                         0,
-                        50 * enemyLevel
+                        template.maxXp
                 );
-
-
 
                 MyCreatures player = myTeam.get(0);
                 System.out.println(player + " lvl:" + myCreaturesList.get(0).level);
                 System.out.println(enemy + " lvl:" + enemyLevel);
 
-
                 fightLoop:
                 while (enemy.hp > 0 && player.hp > 0) {
                     System.out.println("Chose your move: ");
-                    System.out.println("1) Burn");
+                    System.out.println("1) Magic Damage");
                     System.out.println("2) Power up");
                     System.out.println("3) Smack");
                     System.out.println("4) Change Miscrit");
@@ -90,28 +114,16 @@ public class Main {
                             for (int i = 0; i < myTeam.size(); i++) {
                                 System.out.println((i + 1) + ") " + myTeam.get(i).name);
                             }
-                            System.out.print("Chose Miscrit: ");
-                            choseMove = scanner.nextInt();
-                            switch (choseMove) {
-                                case 1 -> {
-                                    player = myTeam.get(0);
-                                    System.out.println("your chose " + player);
-                                }
-                                case 2 -> {
-                                    player = myTeam.get(1);
-                                    System.out.println("your chose " + player);
+                            System.out.print("Choose Miscrit: ");
+                            int choice = scanner.nextInt();
+                            scanner.nextLine();
 
-                                }
-                                case 3 -> {
-                                    player = myTeam.get(2);
-                                    System.out.println("your chose " + player);
-                                }
-                                case 4 -> {
-                                    player = myTeam.get(3);
-                                    System.out.println("your chose " + player);
-                                }
+                            if (choice >= 1 && choice <= myTeam.size()) {
+                                player = myTeam.get(choice - 1);
+                                System.out.println("You chose " + player.name);
+                            } else {
+                                System.out.println("Invalid choice!");
                             }
-
                         }
                         case 5 -> {
                             System.out.println("You Escaped");
@@ -133,22 +145,26 @@ public class Main {
                                     captureUsed = true;
                                 } else if (roll <= captureChance) {
                                     System.out.println("You capture the " + enemy.name);
+                                    enemy.hp = enemy.heal;
                                     myCreaturesList.add(new MyCreatures(enemy.name, enemy.element, enemy.hp, enemy.attack, enemy.magicAttack, enemy.heal, player.xp, 1, 10));
+                                    for (MyCreatures teamMember : myTeam) {
+                                        teamMember.gainXpFrom(enemy);
+                                    }
                                     break fightLoop;
                                 }
                             }
 
                         }
-
+                        default -> System.out.println("Chose the valid option or you will lose :(");
 
                     }
                     if (enemy.hp <= 0) {
-                        System.out.println(enemy.name + " is defeated!");// 10 XP за уровень врага
-                        player.gainXpFrom(enemy);
+                        System.out.println(enemy.name + " is defeated!");
+                        for (MyCreatures teamMember : myTeam) {
+                            teamMember.gainXpFrom(enemy);
+                        }
                         break fightLoop;
                     }
-
-
 
                     int choseEnemyMove = random.nextInt(3) + 1;
                     switch (choseEnemyMove) {
@@ -168,6 +184,9 @@ public class Main {
                 for (int i = 0; i < myCreaturesList.size(); i++) {
                     System.out.println((i + 1) + ") " + myCreaturesList.get(i).name + ": level " + myCreaturesList.get(i).level + " ✨ " + myCreaturesList.get(i).xp + "/" + myCreaturesList.get(i).maxXp);
                 }
+
+                boolean menuIsRunning = true;
+
                 while (menuIsRunning) {
                     System.out.println("Press C for Change your Team");
                     System.out.println("Press S for show your team");
@@ -177,20 +196,18 @@ public class Main {
                     switch (choseOption) {
                         case 'C' -> {
                             myTeam.clear();
-                            for (int i = 0; i < 4; i++) {
-                                System.out.println("Choose creature number for slot " + (i + 1) + ":");
+
+                            // Сколько у нас есть Miscrits (но не больше 4)
+                            int count = Math.min(myCreaturesList.size(), 4);
+
+                            for (int i = 0; i < count; i++) {
+                                System.out.println("Choose creature for slot " + (i + 1) + ":");
                                 int choice = scanner.nextInt();
                                 scanner.nextLine();
-                                MyCreatures selected = myCreaturesList.get(choice - 1);
-
-                                if (myTeam.contains(selected)) {
-                                    System.out.println("You already chose this Myscrit! Choose another one.");
-                                    i--;
-                                } else {
-                                    myTeam.add(selected);
-                                }
+                                myTeam.add(myCreaturesList.get(choice - 1));
                             }
-                            System.out.println("Your Team is");
+
+                            System.out.println("Your Team is:");
                             for (int i = 0; i < myTeam.size(); i++) {
                                 System.out.println((i + 1) + ") " + myTeam.get(i).name);
                             }
@@ -205,15 +222,27 @@ public class Main {
                             System.out.println("You exited menu");
                             menuIsRunning = false;
                         }
+                        default -> System.out.println("Please chose valid option");
                     }
                 }
             }
 
+            case 'H' -> {
+                for (MyCreatures creature : myTeam) {
+                    creature.hp = creature.heal;
+                    System.out.println(creature.name + " healed to full HP! ❤️");
+                }
 
-            default -> System.out.println("Press F for playing");
+                System.out.println("Your team is fully healed!");
+            }
+
+            case 'X' -> {
+                System.out.println("Thanks for playing\uD83D\uDE4F ");
+                gameIsRunning = false;
+            }
+
+            default -> System.out.println("Please chose valid option");
         }
-
-
     }
         scanner.close();
     }

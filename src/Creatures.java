@@ -9,7 +9,6 @@ public class Creatures {
     int level;
     int xp;
     int maxXp;
-
     boolean powerUpActive = false;
     int powerUpTurns = 0;
 
@@ -24,14 +23,12 @@ public class Creatures {
         this.xp = xp;
         this.maxXp = maxXp;
     }
-
-
-        static int fire = 0;
-        static int water = 1;
-        static int nature = 2;
-        static int lightning = 3;
-        static int earth = 4;
-        static int wind = 5;
+        static int Fire = 0;
+        static int Water = 1;
+        static int Nature = 2;
+        static int Lightning = 3;
+        static int Earth = 4;
+        static int Air = 5;
 
     double[][] elementMatrix = {
             {1.0, 0.5, 3.0, 1.0, 1.0, 1.0},
@@ -45,17 +42,17 @@ public class Creatures {
     public int getElementIndex() {
         switch (element) {
             case "Fire":
-                return fire;
+                return Fire;
             case "Water":
-                return water;
+                return Water;
             case "Nature":
-                return nature;
-            case "lightning":
-                return lightning;
-            case "earth":
-                return earth;
-            case "wind":
-                return wind;
+                return Nature;
+            case "Lightning":
+                return Lightning;
+            case "Earth":
+                return Earth;
+            case "Wind":
+                return Air;
             default:
                 return 0;
         }
@@ -66,7 +63,6 @@ public class Creatures {
         int enemyIndex = enemy.getElementIndex();
         return elementMatrix[myIndex][enemyIndex];
     }
-
 
     public void takeDamage(int damage){
         hp -= damage;
@@ -80,9 +76,9 @@ public class Creatures {
     }
 
     public void smack(Creatures target){
-        int damage = 50;
+        int damage = this.attack;
         if(powerUpActive){
-            damage *= 2;
+            damage = damage + (damage * 10 / 100);
             powerUpTurns --;
         } if(powerUpTurns <= 0){
             powerUpActive = false;
@@ -101,6 +97,12 @@ public class Creatures {
         return this.maxXp;
     }
 
+    public void levelUp() {
+        hp = hp + level * 5;
+        attack = attack + level * 5;
+        heal = heal + level * 5;
+    }
+
     public void gainXpFrom(Creatures enemy) {
         int xpGained = enemy.level + 9;
         this.xp += xpGained;
@@ -108,25 +110,28 @@ public class Creatures {
 
         while (this.xp >= this.getMaxXp()) {
             this.level++;
+            levelUp();
             this.xp -= this.getMaxXp();
             this.updateMaxXp();
             System.out.println("⭐ " + this.name + " reached level " + this.level + "!");
         }
     }
 
-
     public void burn(Creatures target) {
-
         double multiplier = this.getElementMultiplier(target);
-        magicAttack = (int) (magicAttack * multiplier);
+        int damage = this.magicAttack;
+
+        damage = (int) (damage * multiplier);
 
         if (powerUpActive) {
-            magicAttack *= 2;
+            damage = damage + (damage * 10 / 100);
             powerUpTurns--;
+            if(powerUpTurns <= 0){
+                powerUpActive = false;
+            }
         }
-
-        target.takeDamage(magicAttack);
-        System.out.println(this.name + " uses Burn on " + target.name + " for " + magicAttack + " damage!");
+        target.takeDamage(damage);
+        System.out.println(this.name + " uses Magic attack on " + target.name + " for " + damage + " damage!");
+        System.out.println(target.name + "'s hp is " + target.hp);
     }
-
 }
