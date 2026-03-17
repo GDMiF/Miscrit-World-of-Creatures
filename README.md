@@ -1,4 +1,4 @@
-#Miscrit Console Game
+# Miscrit Console Game
 Console based game written in Java
 
 This is my first Java project it was created after ~1 month of learning Java to practice core programming concepts and object-oriented design.
